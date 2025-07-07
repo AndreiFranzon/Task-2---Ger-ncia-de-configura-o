@@ -18,7 +18,7 @@ password = "postgres"
 def conexao_database():
     conn = None
     try:
-        conn = psycopg2.connect(host=host, database=name, user=user, password=password)
+        conn = psycopg2.connect(host=host, port=5432, database=name, user=user, password=password)
     except psycopg2.Error as e:
         print (f"Problema ao conectar ao banco: {e}")
     return conn
