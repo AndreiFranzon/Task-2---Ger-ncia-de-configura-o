@@ -34,10 +34,19 @@
     
             <div class="form-group">
                 <label for="situacao">Situação</label>
-                <input type="text" class="form-control" id="situacao" name="situacao" required
-                       value="{{ atividade[5] if atividade }}">
+            
+                {% set opcoes = ['Pendente', 'Em andamento', 'Concluída'] %}
+            
+                <select class="form-control" id="situacao" name="situacao" required>
+                    {% for opcao in opcoes %}
+                        <option value="{{ opcao }}"
+                                {% if atividade and atividade[5] == opcao %}selected{% endif %}>
+                            {{ opcao }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-
+            
             <input type="hidden" name="email_usuario" id="email_usuario">
 
             <button type="submit" class="btn btn-success">{% if atividade %}Salvar Alterações{% else %}Adicionar{% endif %}</button>
