@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% if atividade %} Editar {% else %} Adicionar {% endif %}Atividade</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body class="container mt-3">
+        <h2 class="mb-4">{% if atividade %} Editar {% else %} Adicionar {% endif %} Atividade</h2>
+    
+        <form method="POST">
+            <div class="form-group">
+                <label for="descricao">Descricao</label>
+                <input type="text" class="form-control" id="descricao" name="descricao" required
+                       value="{{ atividade[1] if atividade }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="data_criacao">Data de Criação</label>
+                <input type="date" class="form-control" id="data_criacao" name="data_criacao" required
+                       value="{{ atividade[2]|string if atividade }}">
+            </div>
+    
+            <div class="form-group">
+                <label for="data_prevista">Data Prevista</label>
+                <input type="date" class="form-control" id="data_prevista" name="data_prevista" required
+                       value="{{ atividade[3]|string if atividade }}">
+            </div>
+    
+            <div class="form-group">
+                <label for="data_encerramento">Data de Encerramento</label>
+                <input type="date" class="form-control" id="data_encerramento" name="data_encerramento"
+                       value="{{ atividade[4]|string if atividade }}">
+            </div>
+    
+            <div class="form-group">
+                <label for="situacao">Situação</label>
+                <input type="text" class="form-control" id="situacao" name="situacao" required
+                       value="{{ atividade[5] if atividade }}">
+            </div>
+
+            <input type="hidden" name="email_usuario" id="email_usuario">
+
+            <button type="submit" class="btn btn-success">{% if atividade %}Salvar Alterações{% else %}Adicionar{% endif %}</button>
+            <a href="{{ url_for('mostrar_atividades') }}" class="btn btn-danger">Cancelar</a>
+        </form>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              const token = localStorage.getItem('token');
+              if (!token) {
+                // Token não existe, redireciona para a página de login
+                window.location.href = '/login';
+              }
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const email = localStorage.getItem('email');
+                if (email) {
+                    document.getElementById('email_usuario').value = email;
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <h2>Fazer login</h2>
+    <form id="form-login">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Entrar</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary ml-2">Cancelar</a>
+        
+    </form>
+    <br>
+    <p></p>
+    <h4>Ainda não possui conta?</h4><br>
+    <a href="{{ url_for('cadastro') }}" class="btn btn-info ml-2">Criar conta</a>
+
+    <script>
+        document.getElementById('form-login').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const res = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();
+            if (data.status === 'ok') {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('email', data.email);
+                alert('Login realizado com sucesso');
+                window.location.href = "/read";
+            } else {
+                alert('Erro ao fazer login');
+            }
+        });
+    </script>
+</body>
+</html>
