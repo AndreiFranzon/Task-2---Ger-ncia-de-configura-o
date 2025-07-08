@@ -12,18 +12,6 @@ def client():
 created_user = {}
 
 #1
-def test_login_success(client):
-    response = client.post('/login', data={
-        'email': 'andreifranzon2001@hotmail.com',
-        'senha': 'andrei'
-    }, follow_redirects=True)
-
-    assert response.status_code == 200
-    data = response.get_json()
-    assert data['status'] == 'ok'
-    assert 'token' in data
-
-#2
 def test_login_falha(client):
     response = client.post('/login', data={
         'email': 'usuarioinvalido@email.com',
@@ -34,7 +22,7 @@ def test_login_falha(client):
     data = response.get_json()
     assert data['status'] == 'erro' or 'message' in data
 
-#3
+#2
 def test_login_retorno_json(client):
     response = client.post('/login', data={
         'email': 'andreifranzon2001@hotmail.com',
@@ -48,16 +36,14 @@ def test_login_retorno_json(client):
     assert 'email' in data
     assert data['status'] == 'ok'
 
-#4
-def gera_email():
-    """Cria um e‑mail único usando UUID."""
-    return f"teste_{uuid.uuid4().hex[:8]}@email.com"
-
+#3
 def test_cadastro_usuario(client):
-    email = gera_email()
+    email = "emailteste@teste.com"
+    senha = "senha123"
+
     resp = client.post(
         "/cadastro",
-        data={"nome": "Usuário Teste", "email": email, "senha": "senha123"},
+        data={"nome": "Usuário Teste", "email": email, "senha": senha},
         follow_redirects=False,
     )
     assert resp.status_code == 302
@@ -68,13 +54,27 @@ def test_cadastro_usuario(client):
     cur = conn.cursor()
     cur.execute("SELECT id FROM usuarios WHERE email = %s", (email,))
     row = cur.fetchone()
-    cur.close(); conn.close()
+    cur.close()
+    conn.close()
 
     assert row, "Usuário não encontrado"
     user_id = row[0]
 
     # grava em variável global
     created_user["id"] = user_id
+
+
+#5
+def test_login_success(client):
+    response = client.post('/login', data={
+        'email': 'emailteste@teste.com',
+        'senha': 'senha123'
+    }, follow_redirects=True)
+
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['status'] == 'ok'
+    assert 'token' in data
 
 #5
 def test_deletar_usuario(client):
@@ -194,8 +194,22 @@ def test_edicao_atividade_sem_mudanca(client):
     assert '2025-07-10' in html
     assert 'Em andamento' in html
 
+#11
+def test_filtrar_atividades_por_situacao(client):
+    # Envia uma requisição GET para filtrar as atividades pela situação "Em Andamento"
+    response = client.get('/read?situacao=Em Andamento')
 
-#11 
+    # Verifica se a resposta foi bem-sucedida
+    assert response.status_code == 200
+
+    # Imprime a resposta para depuração
+    print(response.data)
+
+    # Verifica se a situação filtrada "Em Andamento" aparece na resposta
+    assert b'Em Andamento' in response.data
+
+
+#12
 def test_editar_atividade(client):
     # Busca a atividade que foi criada anteriormente
     conn = conexao_database()
@@ -228,7 +242,7 @@ def test_editar_atividade(client):
     assert '2025-07-20' in html
     assert 'Concluída' in html
 
-#12
+#13
 def test_deletar_atividade(client):
     """
     Deleta a atividade criada nos testes anteriores e confirma:
@@ -265,7 +279,7 @@ def test_deletar_atividade(client):
     cur.close()
     conn.close()
 
-#13
+#14
 def test_filtrar_atividades_por_data_criacao(client):
     # Envia uma requisição GET para filtrar as atividades pela data de criação
     response = client.get('/read?data_criacao_filtro=2025-05-10')
@@ -275,7 +289,8 @@ def test_filtrar_atividades_por_data_criacao(client):
     
     # Verifica se os dados retornados estão corretos, por exemplo, que a data filtrada aparece
     assert b'2025-05-10' in response.data
-#14
+
+#15
 def test_filtrar_atividades_por_data_prevista(client):
     # Envia uma requisição GET para filtrar as atividades pela data prevista
     response = client.get('/read?data_prevista_filtro=2025-06-10')
@@ -288,7 +303,7 @@ def test_filtrar_atividades_por_data_prevista(client):
 
     # Verifica se a data que deveria estar filtrada aparece na resposta
     assert b'2025-06-10' in response.data
-#15
+#16
 def test_filtrar_atividades_por_data_encerramento(client):
     # Envia uma requisição GET para filtrar as atividades pela data de encerramento
     response = client.get('/read?data_encerramento_filtro=2025-07-10')
@@ -301,19 +316,7 @@ def test_filtrar_atividades_por_data_encerramento(client):
 
     # Verifica se a data que deveria estar filtrada aparece na resposta
     assert b'2025-07-10' in response.data
-#16
-def test_filtrar_atividades_por_situacao(client):
-    # Envia uma requisição GET para filtrar as atividades pela situação "Em Andamento"
-    response = client.get('/read?situacao=Em Andamento')
 
-    # Verifica se a resposta foi bem-sucedida
-    assert response.status_code == 200
-
-    # Imprime a resposta para depuração
-    print(response.data)
-
-    # Verifica se a situação filtrada "Em Andamento" aparece na resposta
-    assert b'Em Andamento' in response.data
 #17
 def test_filtrar_atividades_com_todos_os_filtros(client):
     # Envia uma requisição GET para filtrar as atividades com todos os filtros
