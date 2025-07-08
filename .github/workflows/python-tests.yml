@@ -49,7 +49,7 @@ jobs:
 
       - name: Run migrations (se houver)
         run: |
-          echo "Adicione aqui os comandos para criar as tabelas, se necessário"
+          alembic upgrade head
 
       - name: Run tests
         env:
