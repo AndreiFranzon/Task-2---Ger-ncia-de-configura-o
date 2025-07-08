@@ -23,20 +23,6 @@ def test_login_falha(client):
     assert data['status'] == 'erro' or 'message' in data
 
 #2
-def test_login_retorno_json(client):
-    response = client.post('/login', data={
-        'email': 'andreifranzon2001@hotmail.com',
-        'senha': 'andrei'
-    }, follow_redirects=True)
-
-    assert response.status_code == 200
-    data = response.get_json()
-    assert 'status' in data
-    assert 'token' in data
-    assert 'email' in data
-    assert data['status'] == 'ok'
-
-#3
 def test_cadastro_usuario(client):
     email = "emailteste@teste.com"
     senha = "senha123"
@@ -63,8 +49,21 @@ def test_cadastro_usuario(client):
     # grava em variável global
     created_user["id"] = user_id
 
+#3
+def test_login_retorno_json(client):
+    response = client.post('/login', data={
+        'email': 'emailteste@teste.com',
+        'senha': 'senha123'
+    }, follow_redirects=True)
 
-#5
+    assert response.status_code == 200
+    data = response.get_json()
+    assert 'status' in data
+    assert 'token' in data
+    assert 'email' in data
+    assert data['status'] == 'ok'
+
+#4
 def test_login_success(client):
     response = client.post('/login', data={
         'email': 'emailteste@teste.com',
@@ -197,7 +196,7 @@ def test_edicao_atividade_sem_mudanca(client):
 #11
 def test_filtrar_atividades_por_situacao(client):
     # Envia uma requisição GET para filtrar as atividades pela situação "Em Andamento"
-    response = client.get('/read?situacao=Em Andamento')
+    response = client.get('/read?situacao=Em andamento')
 
     # Verifica se a resposta foi bem-sucedida
     assert response.status_code == 200
@@ -207,7 +206,6 @@ def test_filtrar_atividades_por_situacao(client):
 
     # Verifica se a situação filtrada "Em Andamento" aparece na resposta
     assert b'Em Andamento' in response.data
-
 
 #12
 def test_editar_atividade(client):
