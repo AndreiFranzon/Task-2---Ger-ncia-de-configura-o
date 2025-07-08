@@ -15,7 +15,7 @@ class Atividade(Base):
     id = Column(Integer, primary_key=True)
     descricao = Column(Text)
     data_criacao = Column(Date)
-    data_previsa = Column(Date)
+    data_prevista = Column(Date)
     data_encerramento = Column(Date)
     situacao = Column(String(50))
 
@@ -23,3 +23,8 @@ class Teste(Base):
     __tablename__ = 'teste'
     id = Column(Integer, primary_key=True)
     nome = Column(String(12))
+
+class Teste2(Base):
+    __tablename__ = 'teste2'
+    id = Column(Integer, primary_key=True)
+    nome = Column(String(50))
