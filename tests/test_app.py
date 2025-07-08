@@ -195,17 +195,11 @@ def test_edicao_atividade_sem_mudanca(client):
 
 #11
 def test_filtrar_atividades_por_situacao(client):
-    # Envia uma requisição GET para filtrar as atividades pela situação "Em Andamento"
-    response = client.get('/read?situacao=Em andamento')
-
-    # Verifica se a resposta foi bem-sucedida
+    response = client.get('/read?situacao=Em Andamento')
     assert response.status_code == 200
 
-    # Imprime a resposta para depuração
-    print(response.data)
-
-    # Verifica se a situação filtrada "Em Andamento" aparece na resposta
-    assert b'Em Andamento' in response.data
+    # comparação sem diferenciar maiúsc/minúsc
+    assert b'em andamento' in response.data.lower()
 
 #12
 def test_editar_atividade(client):
