@@ -23,7 +23,7 @@ def upgrade() -> None:
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('descricao', sa.Text(), nullable=True),
         sa.Column('data_criacao', sa.Date(), nullable=True),
-        sa.Column('data_previsa', sa.Date(), nullable=True),
+        sa.Column('data_prevista', sa.Date(), nullable=True),
         sa.Column('data_encerramento', sa.Date(), nullable=True),
         sa.Column('situacao', sa.String(length=50), nullable=True),
         sa.PrimaryKeyConstraint('id')
