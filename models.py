@@ -18,3 +18,10 @@ class Atividade(Base):
     data_prevista = Column(Date)
     data_encerramento = Column(Date)
     situacao = Column(String(50))
+
+
+
+class Teste(Base):
+    __tablename__ = "Categoria"
+    id    = Column(Integer, primary_key=True, autoincrement=True)  # SERIAL
+    nome  = Column(String(25), nullable=False)
